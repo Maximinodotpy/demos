@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bezier Curve</title>
+
+    <style>
+        :root {
+            --blue: rgb(118, 118, 235)
+        }
+
+        .handleArea {
+            box-shadow: 0 0 10px rgb(35, 35, 35);
+            background-color: rgb(35, 35, 35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 2em;
+            background-color: rgb(30, 30, 30);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: normal;
+            margin-top: 0;
+        }
+
+        a {
+            color: var(--blue)
+        }
+
+        path {
+            stroke: var(--blue)
+        }
+
+        circle:active {
+            height: 20px
+        }
+
+        .topArea {
+            display: flex;
+        }
+
+        .topAreaUI {
+            flex-grow: 1;
+            margin-left: 40px;
+        }
+
+        input, button {
+            box-shadow: 0 0 10px rgb(35, 35, 35);
+            font: inherit;
+            font-family: Consolas, monospace;
+            color: inherit;
+            background-color: rgb(40, 40, 40);
+            outline: none;
+            border: none;
+            padding: 1em;
+        }
+
+        .inputAndButton {
+            display: flex
+        }
+
+        .inputAndButton input {
+            flex-grow: 1;
+        }
+
+        .handlerLine {
+            stroke: var(--blue);
+            stroke-width: 1;
+        }
+
+        .customDisplay {
+            width: 20%;
+            transition-duration: 1s;
+            transition-property: width;
+            background-color: var(--blue);
+            transition-timing-function: cubic-bezier(0.77, 1.38, -0.5, -0.5);
+            display: inline-block;
+        }
+
+        .customDisplay:hover {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cubic Bezier Generator</h1>
+
+        <ul>
+            <li>Handles with Visual Curve</li>
+            <li>comparison for Different CSS Properties (Position, Width, Opacity)</li>
+            <li>Share Curve via link</li>
+            <li>SVG Pattern</li>
+        </ul>
+    
+        <!-- <a href="https://articles.maximmaeder.com/a/Drag%20Handler%20Class/app.js">app.js</a> -->
+    
+        <div class="topArea">
+            <svg width="400" height="400" class="handleArea">
+                <defs>
+                    <pattern id="checkerboardSmall" x="0" y="0" width="0.2" height="0.2">
+                        <rect x="0" y="0" width="20" height="20" fill="rgb(50, 50, 50)"></rect>
+                        <rect x="20" y="20" width="20" height="20" fill="rgb(50, 50, 50)"></rect>
+                    </pattern>
+                </defs>
+                
+                <rect fill="url(#checkerboardSmall)" x="100" y="100" width="200" height="200"></rect>
+
+                <g class="axis">
+                    <!-- <line x1="50" y1="30" x2="300" y2="300" style="stroke:rgb(8, 112, 177);stroke-width:2" /> -->
+                    <line x1="100" y1="100" x2="100" y2="300" style="stroke: grey;stroke-width:2" />
+                    <line x1="100" y1="300" x2="300" y2="300" style="stroke: grey;stroke-width:2" />
+                </g>
+        
+        
+                
+                <line x1="100" y1="300" x2="300" y2="350" class="handlerLine"></line>
+                <circle cx="100" cy="100" r="10" fill="white" class="handler"></circle>
+                
+                <line x1="300" y1="100" x2="300" y2="350" class="handlerLine"></line>
+                <circle cx="100" cy="100" r="10" fill="white" class="handler"></circle>
+        
+                
+                <path d="M100,300 C100,150 300,150 300,100" fill="none" stroke="white" stroke-width="3" id="bezier"></path>
+    
+                <!-- dfkjased -->
+                <circle cx="100" cy="300" r="5" fill="grey"></circle>
+                <circle cx="300" cy="100" r="5" fill="grey"></circle>
+            </svg>
+
+            <div class="topAreaUI">
+                <div class="inputAndButton">
+                    <input type="text" id="output">
+                    <button>Copy</button>
+                </div>
+
+                <div class="display">
+                    <div class="customDisplay extended">Custom Curve</div>
+                </div>
+            </div>
+        </div>
+
+
+        <p>
+            Made By <a href="https://maximmaeder.com/">Maxim Maeder</a>
+        </p>
+    </div>
+    
+
+
+    <script src="../033 - Drag Handler/app_v2.js"></script>
+
+    <script>
+        let draggers = []
+
+        Array.from(document.querySelectorAll('.handler')).forEach((el, i) => {
+
+            draggers[i] = new dragHandler({
+                area: document.querySelector('svg'),
+                handler: el,
+                handlerClick: true,
+                customCallback: (ev) => {
+                    let data = bezier.getAttribute('d').matchAll(/(?<mod>M|C)?(?<x>[\d|\.]+),(?<y>[\d|\.]+)/g)
+                    data = Array.from(data);
+    
+                    data[1 + i]['groups']['x'] = el.getAttribute('cx')
+                    data[1 + i]['groups']['y'] = el.getAttribute('cy')
+    
+                    el.previousElementSibling.setAttribute('x2', el.getAttribute('cx'))
+                    el.previousElementSibling.setAttribute('y2', el.getAttribute('cy'))
+    
+                    let string = ''
+    
+                    data.forEach((el) => {
+                        string += ` ${el.groups.mod || ''}${el.groups.x},${el.groups.y} `
+                    })
+    
+                    bezier.setAttribute('d', string)
+
+                    const x1 = (Math.round(Number(data[1]['groups']['x'])) - 100) / 200
+                    const y1 = 1- (Math.round(Number(data[1]['groups']['y'])) - 100) / 200
+                    const x2 = (Math.round(Number(data[2]['groups']['x'])) - 100) / 200
+                    const y2 = 1- (Math.round(Number(data[2]['groups']['y'])) - 100) / 200
+
+
+                    console.log('fasd');
+                    output.value = `cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`
+
+                    let customDisplay = document.querySelector('.customDisplay')
+                    console.log(customDisplay);
+
+                    customDisplay.style.transitionTimingFunction = `cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`
+                    customDisplay.setAttribute('style', 'transition-timing-function: '+`cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`)
+
+                    console.log(customDisplay.style.transitionTimingFunction);
+                    console.log(`cubic-bezier(${x1}, ${y1}, ${x2}, ${y2})`);
+                }
+            })
+        })
+
+        console.log(draggers);
+
+        draggers[0].set({
+            x: 480,
+            y: 300,
+        })
+        draggers[1].set({
+            x: 300,
+            y: 300,
+        })
+
+    </script>
+
+</body>
+</html>

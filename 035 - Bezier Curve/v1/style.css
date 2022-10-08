@@ -1,0 +1,180 @@
+:root {
+    --blue: rgb(118, 118, 235)
+}
+
+.handleAreaWrapper {
+    box-shadow: 0 0 10px rgb(35, 35, 35);
+    background-color: rgb(35, 35, 35);
+    width: 300px;
+    text-align: center;
+}
+
+.handleArea {
+    overflow: visible;
+}
+
+.handleArea:focus {
+    outline: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.handler:hover {
+    cursor: move;
+}
+
+body {
+    height: 100vh;
+    background-color: rgb(30, 30, 30);
+    color: white;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+    padding-top: 2em;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3em 1em;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+}
+
+
+
+
+
+.topArea {
+    display: grid;
+    flex-grow: 1;
+    grid-template-columns: 300px 1fr
+}
+
+.topAreaUI {
+    flex-grow: 1;
+    margin-left: 40px;
+}
+
+.inputAndButton {
+    display: flex
+}
+
+.inputAndButton input {
+    flex-grow: 1;
+}
+
+.handlerLine {
+    stroke: var(--blue);
+    stroke-width: 1;
+}
+
+.customDisplay {
+    background-color: var(--blue);
+    word-break: keep-all;
+}
+
+.display {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column
+}
+
+.display>*>div {
+    animation-duration: 2s;
+    animation-name: changewidth;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    display: inline-block;
+    margin-bottom: 20px;
+    height: 40px;
+    clear: both;
+}
+.display>div>div:not(.customDisplay) {
+    background-color: rgb(60, 60, 60);
+    opacity: 0.2;
+}
+
+@keyframes changewidth {
+    10% {
+        width: 100px;
+    }
+
+    90% {
+        width: 100%;
+    }
+}
+
+.tabs {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-registers button {
+    margin: 0;
+}
+
+.tab-bodies {
+    flex-grow: 1;
+}
+
+
+.presets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px
+}
+
+.preset {
+    background-color: rgb(40, 40, 40);
+    min-height: 100px;
+    padding: 1em;   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.axisText {
+    fill: grey
+}
+.rotate {
+    transform: rotate(90deg);
+    transform-origin: 50% 50%;
+}
+
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    font-weight: normal;
+    margin: 0;
+}
+
+a {
+    color: var(--blue)
+}
+
+path {
+    stroke: var(--blue)
+}
+
+input,
+button {
+    box-shadow: 0 0 10px rgb(35, 35, 35);
+    font: inherit;
+    font-family: Consolas, monospace;
+    color: inherit;
+    background-color: rgb(40, 40, 40);
+    outline: none;
+    border: none;
+    padding: 1em;
+}
